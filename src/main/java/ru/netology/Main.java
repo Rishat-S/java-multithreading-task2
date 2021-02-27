@@ -2,27 +2,25 @@ package ru.netology;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        ThreadGroup threadGroup = new ThreadGroup("Thread group");
 
-        ExecutorService es = Executors.newFixedThreadPool(4);
+    public static final int NUMBER_THREADS = 4;
+    public static final int DELAY_FOR_THREADS_EXECUTION = 1000;
+
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService threadPool = Executors.newFixedThreadPool(NUMBER_THREADS);
 
         System.out.println("Started threads..");
-        Thread th1 = new MyThread(threadGroup, "1");
-        Thread th2 = new MyThread(threadGroup, "2");
-        Thread th3 = new MyThread(threadGroup, "3");
-        Thread th4 = new MyThread(threadGroup, "4");
+        Future<?> future = threadPool.submit(new MyCollableThread());
 
-        th1.start();
-        th2.start();
-        th3.start();
-        th4.start();
+        while (!future.isDone()) {
+            System.out.println("Running...");
+            Thread.sleep(DELAY_FOR_THREADS_EXECUTION);
+        }
 
-        Thread.sleep(15000);
-        threadGroup.interrupt();
+        threadPool.shutdown();
         System.out.println("Threads interrupted.");
-
     }
 }
