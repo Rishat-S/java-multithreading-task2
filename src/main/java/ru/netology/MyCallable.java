@@ -2,15 +2,15 @@ package ru.netology;
 
 import java.util.concurrent.Callable;
 
-public class MyCollableThread implements Callable<Integer> {
+public class MyCallable implements Callable<Integer> {
 
     public static final int DELAY_FOR_IMITATION_WORKS = 2500;
     public static final int COUNT_EXEC = 3;
 
-    public Integer count;
+    public Integer count = 0;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         try {
             for (int i = 0; i < COUNT_EXEC; i++) {
                 Thread.sleep(DELAY_FOR_IMITATION_WORKS);
