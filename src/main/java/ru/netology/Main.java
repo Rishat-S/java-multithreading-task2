@@ -1,30 +1,35 @@
 package ru.netology;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class Main {
 
     public static final int NUMBER_THREADS = 4;
-    public static final int DELAY_FOR_IMITATION_WORKS = 1000;
 
     public static void main(String[] args) {
-        ExecutorService threadPool = Executors.newFixedThreadPool(NUMBER_THREADS);
-        Callable<Integer> myCallable = new MyCallable();
+        int countOfMassages = 0;
+        ExecutorService tasksPool = Executors.newFixedThreadPool(NUMBER_THREADS);
+        List<MyCallable> tasks = new ArrayList<>();
         System.out.println("Started threads..");
-        Future<Integer> task = threadPool.submit(myCallable);
 
-        try {
-            while (!task.isDone()) {
-                System.out.println("Is not done...");
-                Thread.sleep(DELAY_FOR_IMITATION_WORKS);
-            }
-            System.out.println(task.get());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-
+        for (int i = 0; i < NUMBER_THREADS; i++) {
+            MyCallable myCallable = new MyCallable();
+            tasks.add(myCallable);
         }
 
-        threadPool.shutdown();
-        System.out.println("Threads interrupted.");
+        try {
+            List<Future<Integer>> futures = tasksPool.invokeAll(tasks);
+            for (Future<Integer> f : futures) {
+                countOfMassages += f.get();
+            }
+            System.out.println("Count of massages: " + countOfMassages);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("All threads interrupted.");
+        tasksPool.shutdown();
     }
 }
