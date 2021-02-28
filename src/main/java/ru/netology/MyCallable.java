@@ -7,7 +7,7 @@ public class MyCallable implements Callable<Integer> {
     public static final int DELAY_FOR_IMITATION_WORKS = 2500;
     public static final int COUNT_EXEC = 3;
 
-    public Integer count = 0;
+    public Integer countMassages = 0;
 
     @Override
     public Integer call() {
@@ -16,13 +16,13 @@ public class MyCallable implements Callable<Integer> {
                 Thread.sleep(DELAY_FOR_IMITATION_WORKS);
                 System.out.println("I am Thread " + Thread.currentThread().getName()
                         + ". Hello everyone!");
-                count++;
+                countMassages++;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             System.out.println("Thread " + Thread.currentThread().getName() + " interrupted.");
         }
-        return count;
+        return countMassages;
     }
 }

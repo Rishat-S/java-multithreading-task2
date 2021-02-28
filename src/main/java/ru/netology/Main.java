@@ -12,15 +12,29 @@ public class Main {
     public static final int NUMBER_THREADS = 4;
 
     public static void main(String[] args) {
-        int countOfMassages = 0;
         ExecutorService tasksPool = Executors.newFixedThreadPool(NUMBER_THREADS);
-        List<MyCallable> tasks = new ArrayList<>();
-        System.out.println("Started threads..");
+        List<MyCallable> tasks1 = new ArrayList<>();
+        List<MyCallable> tasks2 = new ArrayList<>();
 
+        startedTasks(tasks1);
+        doneAllTasks(tasksPool, tasks1);
+
+        startedTasks(tasks2);
+        doneAnyTasks(tasksPool, tasks2);
+
+        stopAll(tasksPool);
+    }
+
+    private static void startedTasks(List<MyCallable> tasks) {
+        System.out.println("Started threads..");
         for (int i = 0; i < NUMBER_THREADS; i++) {
             MyCallable myCallable = new MyCallable();
             tasks.add(myCallable);
         }
+    }
+
+    private static void doneAllTasks(ExecutorService tasksPool, List<MyCallable> tasks) {
+        int countOfMassages = 0;
 
         try {
             List<Future<Integer>> futures = tasksPool.invokeAll(tasks);
@@ -31,8 +45,19 @@ public class Main {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+    }
 
-        System.out.println("All threads interrupted.");
+    private static void doneAnyTasks(ExecutorService tasksPool, List<MyCallable> tasks) {
+        try {
+            Integer countOfMassages = tasksPool.invokeAny(tasks);
+            System.out.println("Count of massages: " + countOfMassages);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void stopAll(ExecutorService tasksPool) {
+        System.out.println("Tasks pool shutdown.");
         tasksPool.shutdown();
     }
 }
