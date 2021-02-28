@@ -20,7 +20,7 @@ public class Main {
         doneAllTasks(tasksPool, tasks1);
 
         startedTasks(tasks2);
-        doneAnyTasks(tasksPool, tasks2);
+        doneAnyTask(tasksPool, tasks2);
 
         stopAll(tasksPool);
     }
@@ -47,7 +47,7 @@ public class Main {
         }
     }
 
-    private static void doneAnyTasks(ExecutorService tasksPool, List<MyCallable> tasks) {
+    private static void doneAnyTask(ExecutorService tasksPool, List<MyCallable> tasks) {
         try {
             Integer countOfMassages = tasksPool.invokeAny(tasks);
             System.out.println("Count of massages: " + countOfMassages);
